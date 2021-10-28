@@ -1,23 +1,30 @@
-import logo from './logo.svg';
+import { useEffect , useState} from 'react';
 import './App.css';
+import Breadcrumb from './componant/Breadcrumb';
+import Images from './componant/Images';
+import Navbar from './componant/Navbar';
+import {getimages} from './services/Api'
 
 function App() {
+  const [data, setData] =useState([]);
+  const [count, setCount] =useState(10);
+  const[ text, setText] = useState('mountains');
+  useEffect(() =>{
+    getimages(text,count).then(response =>{
+      setData(response.data.hits)
+      console.log(response.data.hits);
+    }  )
+  },
+  [text,count])
+  const onTextChange =(text) => {setText(text)
+  };
+  const onCountChange=(count) =>{ setCount(count)};
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Navbar/>
+      <Breadcrumb onTextChange={onTextChange} onCountChange={onCountChange}/>
+      <Images data={data}/>
+
     </div>
   );
 }
